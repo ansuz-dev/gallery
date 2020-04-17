@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "gallery/routes"
   "gallery/services"
 )
 
@@ -11,21 +12,6 @@ func main() {
   )
   fmt.Println("Connected !")
 
-  // account := models.Account{
-  //   ID:        1,
-  //   Email:     "john.doe@example.com",
-  //   Password:  "123456",
-  //   CreatedAt: time.Now(),
-  // }
-
-  // fmt.Printf("account: %#v\n", account)
-
-  // var imageSrc = "./cat.jpg"
-  // sizes, err := services.ResizeAll(imageSrc)
-  // if err != nil {
-  //   fmt.Println(err)
-  // } else {
-  //   fmt.Println(sizes)
-  // }
-
+  g := routes.Create()
+  g.Run("127.0.0.1:3000")
 }

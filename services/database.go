@@ -6,38 +6,52 @@ import (
   "github.com/jinzhu/gorm"
 )
 
-func ConnectDB(connection string) *gorm.DB {
+var DB *gorm.DB
+
+func ConnectDB(connection string) (err error) {
 
   // Create connection
-  db, err := gorm.Open("mysql", connection)
+  DB, err = gorm.Open("mysql", connection)
   if err != nil {
-    panic(err)
+    return
   }
 
-  err = db.AutoMigrate(
+  err = DB.AutoMigrate(
     &models.Account{},
     &models.Gallery{},
     &models.Photo{},
     &models.Reaction{},
   ).Error
   if err != nil {
-    panic(err)
+    return
   }
-  db.Model(&models.Gallery{}).AddForeignKey(
+  DB.Model(&models.Gallery{}).AddForeignKey(
     "account_id", "accounts(id)", "CASCADE", "CASCADE",
   )
-  db.Model(&models.Photo{}).AddForeignKey(
+  DB.Model(&models.Photo{}).AddForeignKey(
     "account_id", "accounts(id)", "CASCADE", "CASCADE",
   )
-  db.Model(&models.Photo{}).AddForeignKey(
+  DB.Model(&models.Photo{}).AddForeignKey(
     "gallery_id", "galleries(id)", "CASCADE", "CASCADE",
   )
-  db.Model(&models.Reaction{}).AddForeignKey(
+  DB.Model(&models.Reaction{}).AddForeignKey(
     "account_id", "accounts(id)", "CASCADE", "CASCADE",
   )
-  db.Model(&models.Reaction{}).AddForeignKey(
+  DB.Model(&models.Reaction{}).AddForeignKey(
     "photo_id", "photos(id)", "CASCADE", "CASCADE",
   )
 
-  return db
+  return
+}
+
+func GetAccountByID(id uint) (account *models.Account, err error) {
+  account = &models.Account{}
+  err = DB.First(account, id).Error
+  return
+}
+
+func GetAccountByEmail(email string) (account *models.Account, err error) {
+  account = &models.Account{}
+  err = DB.Where("email = ?", email).First(account).Error
+  return
 }
