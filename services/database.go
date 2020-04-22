@@ -44,7 +44,15 @@ func ConnectDB(connection string) (err error) {
   return
 }
 
+func CloseDB() {
+  if DB != nil {
+    DB.Close()
+  }
+}
+
 func GetAccountByID(id uint) (account *models.Account, err error) {
+  Logger.Debugf("Get account by ID=[%d]", id)
+
   account = &models.Account{}
   err = DB.First(account, id).Error
   return
@@ -53,5 +61,36 @@ func GetAccountByID(id uint) (account *models.Account, err error) {
 func GetAccountByEmail(email string) (account *models.Account, err error) {
   account = &models.Account{}
   err = DB.Where("email = ?", email).First(account).Error
+  return
+}
+
+func UpdateAccount(id uint, newAccount *models.Account) (err error) {
+  Logger.Debugf("Update account by ID=[%d]", id)
+
+  account := &models.Account{}
+  err = DB.First(account, id).Error
+  if err != nil {
+    return
+  }
+
+  if newAccount.Email != account.Email {
+    account.Email = newAccount.Email
+
+    err = DB.Save(account).Error
+  }
+
+  return
+}
+
+func DeleteAccount(id uint) (err error) {
+  Logger.Debugf("Delete account by ID=[%d]", id)
+
+  account := &models.Account{}
+  err = DB.First(account, id).Error
+  if err != nil {
+    return
+  }
+
+  err = DB.Delete(account).Error
   return
 }

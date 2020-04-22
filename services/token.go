@@ -32,7 +32,6 @@ func CreateToken(accountId uint) (tokenStr string, err error) {
 func VerifyToken(tokenStr string) (claims *TokenClaims, err error) {
   token, err := jwt.ParseWithClaims(tokenStr, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
     if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-      fmt.Println("Invalid signing method")
       return nil, fmt.Errorf("Invalid token")
     }
 
@@ -40,17 +39,12 @@ func VerifyToken(tokenStr string) (claims *TokenClaims, err error) {
   })
 
   if err != nil {
-    fmt.Println("err:", err)
     return
   }
-
-  fmt.Println("token:", token)
 
   if claims, ok := token.Claims.(*TokenClaims); ok && token.Valid {
     return claims, nil
   } else {
-    fmt.Println("claims:", claims)
-
     return nil, fmt.Errorf("Invalid token")
   }
 }

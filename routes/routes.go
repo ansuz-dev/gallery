@@ -3,6 +3,7 @@ package routes
 import (
   // "fmt"
   "gallery/middlewares"
+  "gallery/services"
   "github.com/gin-gonic/gin"
 )
 
@@ -10,9 +11,11 @@ func Create() (g *gin.Engine) {
 
   g = gin.Default()
 
+  g.Use(services.LogToFile())
+
   v1 := g.Group("/v1")
   {
-    v1.POST("/registration", nil)
+    v1.POST("/registration", Registration)
     v1.POST("/authentication", Authentication)
 
     account := v1.Group("/account")

@@ -2,6 +2,7 @@ package services
 
 import (
   "errors"
+  "gallery/models"
 )
 
 func Authenticate(email string, password string) (tokenStr string, err error) {
@@ -19,5 +20,15 @@ func Authenticate(email string, password string) (tokenStr string, err error) {
   // create a new token
   tokenStr, err = CreateToken(account.ID)
 
+  return
+}
+
+func Register(email string, password string) (account *models.Account, err error) {
+  account = &models.Account{
+    Email:    email,
+    Password: password,
+  }
+
+  err = DB.Create(account).Error
   return
 }
