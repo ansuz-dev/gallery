@@ -8,6 +8,7 @@ import (
 )
 
 type Credential struct {
+  Name     string `json:"name"`
   Email    string `json:"email"`
   Password string `json:"password"`
 }
@@ -22,7 +23,7 @@ func Registration(ctx *gin.Context) {
     return
   }
 
-  account, err := services.Register(cred.Email, cred.Password)
+  account, err := services.Register(cred.Name, cred.Email, cred.Password)
   if err != nil {
     ctx.AbortWithError(400, errors.New("Cannot register the account"))
     return

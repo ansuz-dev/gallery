@@ -1,6 +1,7 @@
 package services
 
 import (
+  "errors"
   "gallery/models"
   _ "github.com/go-sql-driver/mysql"
   "github.com/jinzhu/gorm"
@@ -73,11 +74,13 @@ func UpdateAccount(id uint, newAccount *models.Account) (err error) {
     return
   }
 
+  if newAccount.Name != account.Name {
+    account.Name = newAccount.Name
+  }
   if newAccount.Email != account.Email {
     account.Email = newAccount.Email
-
-    err = DB.Save(account).Error
   }
+  err = DB.Save(account).Error
 
   return
 }
@@ -92,5 +95,31 @@ func DeleteAccount(id uint) (err error) {
   }
 
   err = DB.Delete(account).Error
+  return
+}
+
+func CreateGallery(accountId uint, gallery *models.Gallery) (err error) {
+  if gallery == nil {
+    err = errors.New("Missing gallery")
+    return
+  }
+
+  Logger.Debugf(
+    "Create gallery with name=[%s] by account=[%d]",
+    gallery.Name, accountId,
+  )
+
+  gallery.AccountId = accountId
+  gallery.Visibility = "PRIVATE"
+  err = DB.Create(gallery).Error
+
+  return
+}
+
+func GetGalleries(accountId uint) (galleries *[]models.Gallery, err error) {
+  Logger.Debugf("Create galleries by account=[%d]", accountId)
+
+  galleries = new([]models.Gallery)
+  err = DB.Where("account_id = ?", accountId).Find(galleries).Error
   return
 }

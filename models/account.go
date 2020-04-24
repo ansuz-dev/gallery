@@ -6,6 +6,8 @@ import (
 
 type Account struct {
   ID        uint       `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id"`
+  Name      string     `gorm:"type:VARCHAR(256);NOT NULL" json:"name"`
+  Avatar    string     `gorm:"type:VARCHAR(256)" json:"avatar"`
   Email     string     `gorm:"type:VARCHAR(256);NOT NULL;UNIQUE" json:"email"`
   Password  string     `gorm:"type:VARCHAR(64);NOT NULL" json:"-"`
   CreatedAt time.Time  `gorm:"NOT NULL" json:"created_at"`

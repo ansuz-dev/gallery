@@ -23,7 +23,7 @@ func Authenticate(email string, password string) (tokenStr string, err error) {
   return
 }
 
-func Register(email string, password string) (account *models.Account, err error) {
+func Register(name string, email string, password string) (account *models.Account, err error) {
   account = &models.Account{
     Email:    email,
     Password: password,

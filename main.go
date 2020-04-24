@@ -7,7 +7,7 @@ import (
 
 func main() {
   _ = services.ConnectDB(
-    "dev:root@tcp(127.0.0.1:3306)/galleries?parseTime=true",
+    "demo:demo@tcp(127.0.0.1:3306)/galleries?parseTime=true",
   )
   defer services.CloseDB()
 
